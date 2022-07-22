@@ -1,5 +1,6 @@
 package net.coderbot.iris.mixin.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.coderbot.iris.Iris;
 import net.coderbot.iris.gui.screen.HudHideable;
@@ -66,6 +67,11 @@ public class MixinGui {
 		WorldRenderingPipeline pipeline = Iris.getPipelineManager().getPipelineNullable();
 
 		if (pipeline != null && !pipeline.shouldRenderVignette()) {
+			// we need to set up the GUI render state ourselves if we cancel the vignette
+			RenderSystem.enableDepthTest();
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.defaultBlendFunc();
+
 			ci.cancel();
 		}
 	}
